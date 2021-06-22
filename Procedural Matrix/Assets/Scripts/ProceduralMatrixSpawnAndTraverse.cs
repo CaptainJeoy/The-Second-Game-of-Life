@@ -1,23 +1,23 @@
-﻿using UnityEngine;
-using UnityEngine.UI;
+﻿using System;
+using UnityEngine;
 
 public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 {
-    public enum TraverseStyle
+    public enum TraverseMode
     {
-        Straight,
-        Diagonal
+        Traverse1, Traverse2, Traverse3, Traverse4, Traverse5, Traverse6, Traverse7, Traverse8, Traverse9, Traverse10,
+        Traverse11, Traverse12, Traverse13, Traverse14, Traverse15, Traverse16, Traverse17, Traverse18, Traverse19, Traverse20,
+        Traverse21, Traverse22, Traverse23, Traverse24, Traverse25, Traverse26, Traverse27, Traverse28, Traverse29, Traverse30
     }
 
     public BounceTween tweenObj;
 
-    public TraverseStyle loadStyle = TraverseStyle.Diagonal;
+    public TraverseMode traverseMode = TraverseMode.Traverse1;
 
-    public Slider loadSpeedSlider;
+    public int Dimension = 15;
 
-    public int Dimension = 7;
-
-    public float defaultDelaySpan = 0.06f;
+    [Range(0.2f, 0f)]
+    public float defaultDelaySpan = 0.094f;
 
     private BounceTween[,] squares;
 
@@ -39,12 +39,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
     bool dIsFirstPartDone = false, invDIsFirstPartDone = false, dRIsFirstPartDone = false,
         invDRIsFirstPartDone = false;
 
+    int currChannel;
+
     private void Awake()
     {
-        loadSpeedSlider.value = defaultDelaySpan;
-
         invDLSecCounter = Dimension;
         dRSecCounter = Dimension;
+
+        currChannel = (int)traverseMode;
 
         SpawnMatrix(Dimension);
     }
@@ -68,140 +70,168 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
     private void Update()
     {
+        ChangeChannel();
+
         /*
          * All Traversing functions are stackable and based on the demo video,
          * below are the stack arrangements used for the different traversing patterns you saw.
-         * If you're opening the project in unity, just UNCOMMENT any of the functions,
-         * they are all numbered based on their appearance in the video.
          * If you just care about the algorithms, just scroll past this "Update" function.
          */
-
-        //Traverse 1
-        HorizontalStepTraverse();
-
-        //Traverse 2
-        /*
-        HorizontalTraverse();
-        */
-
-        //Traverse 3
-        /*
-        HorizontalTraverseInverse();
-        */
-
-        //Traverse 4
-        /*
-        HorizontalTraverse();
-        HorizontalTraverseInverse();
-        */
-
-        //Traverse 5
-        /*
-        VerticalTraverse();
-        */
-
-        //Traverse 6
-        /*
-        VerticalTraverseInverse();
-        */
-
-        //Traverse 7
-        /*
-        VerticalTraverse();
-        VerticalTraverseInverse();
-        */
-
-        //Traverse 8
-        /*
-        HorizontalTraverse();
-        HorizontalTraverseInverse();
-        VerticalTraverse();
-        VerticalTraverseInverse();
-        */
-
-        //Traverse 9
-        /*
-        DiagonalRightTraverseInverse();
-        */
-
-        //Traverse 10
-        /*
-        DiagonalLeftTraverseInverse();
-        */
-
-        //Traverse 11
-        /*
-        DiagonalRightTraverseInverse();
-        DiagonalLeftTraverseInverse();
-        */
-
-        //Traverse 12
-        /*
-        DiagonalRightTraverse();
-        */
-
-        //Traverse 13
-        /*
-        DiagonalLeftTraverse();
-        */
-
-        //Traverse 14
-        /*
-        DiagonalRightTraverse();
-        DiagonalLeftTraverse();
-        */
-
-        //Traverse 15
-        /*
-        DiagonalRightTraverse();
-        DiagonalLeftTraverse();
-        DiagonalRightTraverseInverse();
-        DiagonalLeftTraverseInverse();
-        */
-
-        //Traverse 16
-        /*
-        HorizontalTraverse();
-        HorizontalTraverseInverse();
-        VerticalTraverseInverse();
-        */
-
-        //Traverse 17
-        /*
-        HorizontalTraverse();
-        VerticalTraverseInverse();
-        */
-
-        //Traverse 18
-        /*
-        HorizontalTraverse();
-        HorizontalTraverseInverse();
-        VerticalTraverse();
-        VerticalTraverseInverse();
-
-        DiagonalRightTraverse();
-        DiagonalLeftTraverse();
-        DiagonalRightTraverseInverse();
-        DiagonalLeftTraverseInverse();
-       */
-
-        /*
-        switch (loadStyle)
+        #region TraverseCombinations
+        switch (traverseMode)
         {
-            case TraverseStyle.Straight:
-                HorizontalTraverseInverse();
+            case TraverseMode.Traverse1:
+                HorizontalStepTraverse();
+                break;
+            case TraverseMode.Traverse2:
                 HorizontalTraverse();
+                break;
+            case TraverseMode.Traverse3:
+                HorizontalTraverseInverse();
+                break;
+            case TraverseMode.Traverse4:
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                break;
+            case TraverseMode.Traverse5:
+                VerticalTraverse();
+                break;
+            case TraverseMode.Traverse6:
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse7:
                 VerticalTraverse();
                 VerticalTraverseInverse();
                 break;
-            case TraverseStyle.Diagonal:
-                DiagonalLeftTraverse();
+            case TraverseMode.Traverse8:
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                VerticalTraverse();
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse9:
+                DiagonalRightTraverseInverse();
+                break;
+            case TraverseMode.Traverse10:
                 DiagonalLeftTraverseInverse();
+                break;
+            case TraverseMode.Traverse11:
+                DiagonalRightTraverseInverse();
+                DiagonalLeftTraverseInverse();
+                break;
+            case TraverseMode.Traverse12:
+                DiagonalRightTraverse();
+                break;
+            case TraverseMode.Traverse13:
+                DiagonalLeftTraverse();
+                break;
+            case TraverseMode.Traverse14:
+                DiagonalRightTraverse();
+                DiagonalLeftTraverse();
+                break;
+            case TraverseMode.Traverse15:
+                DiagonalRightTraverse();
+                DiagonalLeftTraverse();
+                DiagonalRightTraverseInverse();
+                DiagonalLeftTraverseInverse();
+                break;
+            case TraverseMode.Traverse16:
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse17:
+                HorizontalTraverse();
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse18:
                 DiagonalRightTraverse();
                 DiagonalRightTraverseInverse();
                 break;
+            case TraverseMode.Traverse19:
+                HorizontalTraverse();
+                VerticalTraverse();
+                break;
+            case TraverseMode.Traverse20:
+                DiagonalLeftTraverse();
+                DiagonalLeftTraverseInverse();
+                break;
+            case TraverseMode.Traverse21:
+                DiagonalRightTraverse();
+                DiagonalLeftTraverse();
+                DiagonalRightTraverseInverse();
+                break;
+            case TraverseMode.Traverse22:
+                DiagonalRightTraverse();
+                HorizontalTraverse();
+                break;
+            case TraverseMode.Traverse23:
+                DiagonalRightTraverseInverse();
+                DiagonalRightTraverse();
+                HorizontalTraverse();
+                break;
+            case TraverseMode.Traverse24:
+                DiagonalLeftTraverse();
+                VerticalTraverse();
+                break;
+            case TraverseMode.Traverse25:
+                DiagonalLeftTraverseInverse();
+                DiagonalLeftTraverse();
+                VerticalTraverse();
+                break;
+            case TraverseMode.Traverse26:
+                DiagonalLeftTraverseInverse();
+                DiagonalLeftTraverse();
+                VerticalTraverse();
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse27:
+                DiagonalRightTraverseInverse();
+                DiagonalRightTraverse();
+                VerticalTraverse();
+                VerticalTraverseInverse();
+                break;
+            case TraverseMode.Traverse28:
+                DiagonalRightTraverseInverse();
+                DiagonalRightTraverse();
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                break;
+            case TraverseMode.Traverse29:
+                DiagonalLeftTraverseInverse();
+                DiagonalLeftTraverse();
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                break;
+            case TraverseMode.Traverse30:
+                HorizontalTraverse();
+                HorizontalTraverseInverse();
+                VerticalTraverse();
+                VerticalTraverseInverse();
+
+                DiagonalRightTraverse();
+                DiagonalLeftTraverse();
+                DiagonalRightTraverseInverse();
+                DiagonalLeftTraverseInverse();
+                break;
         }
-        */
+        #endregion
+    }
+
+    void ChangeChannel()
+    {
+        if (Input.GetKeyDown(KeyCode.RightArrow)) SwitchEnum(1);
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) SwitchEnum(-1);
+    }
+
+    void SwitchEnum(int inputDir)
+    {
+        currChannel = (currChannel + inputDir) % Enum.GetValues(typeof(TraverseMode)).Length;
+
+        if (currChannel < 0)
+            currChannel = Enum.GetValues(typeof(TraverseMode)).Length - 1;
+    
+        traverseMode = (TraverseMode) currChannel;
     }
 
     void HorizontalTraverse()
@@ -216,7 +246,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 hJ++;
 
-                hDelay = Time.time + loadSpeedSlider.value;
+                hDelay = Time.time + defaultDelaySpan;
             }
 
             hI++;
@@ -239,7 +269,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 invHJ++;
 
-                invHDelay = Time.time + loadSpeedSlider.value;
+                invHDelay = Time.time + defaultDelaySpan;
             }
 
             invHCounter++;
@@ -258,7 +288,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
             squares[hSI, hSJ].BounceSquare();
 
-            hSDelay = Time.time + loadSpeedSlider.value;
+            hSDelay = Time.time + defaultDelaySpan;
             hSCounter++;
 
             if (hSCounter == (Dimension * Dimension))
@@ -278,7 +308,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 vJ++;
 
-                vDelay = Time.time + loadSpeedSlider.value;
+                vDelay = Time.time + defaultDelaySpan;
             }
 
             vI++;
@@ -301,7 +331,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 invVJ++;
 
-                invVDelay = Time.time + loadSpeedSlider.value;
+                invVDelay = Time.time + defaultDelaySpan;
             }
 
             invVCounter++;
@@ -329,7 +359,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dLI--;
                     dLJ++;
 
-                    dLDelay = Time.time + loadSpeedSlider.value;
+                    dLDelay = Time.time + defaultDelaySpan;
                 }
 
                 if (dLJ >= Dimension - 1)
@@ -352,7 +382,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dLI--;
                     dLJ++;
 
-                    dLDelay = Time.time + loadSpeedSlider.value;
+                    dLDelay = Time.time + defaultDelaySpan;
                 }
             }
 
@@ -388,7 +418,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDLI++;
                     invDLJ--;
 
-                    invDLDelay = Time.time + loadSpeedSlider.value;
+                    invDLDelay = Time.time + defaultDelaySpan;
                 }
 
                 if (invDLJ <= 0)
@@ -411,7 +441,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDLI++;
                     invDLJ--;
 
-                    invDLDelay = Time.time + loadSpeedSlider.value;
+                    invDLDelay = Time.time + defaultDelaySpan;
                 }
             }
 
@@ -447,7 +477,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dRI--;
                     dRJ--;
 
-                    dRDelay = Time.time + loadSpeedSlider.value;
+                    dRDelay = Time.time + defaultDelaySpan;
                 }
 
                 if (dRJ <= 0)
@@ -470,7 +500,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dRI--;
                     dRJ--;
 
-                    dRDelay = Time.time + loadSpeedSlider.value;
+                    dRDelay = Time.time + defaultDelaySpan;
                 }
             }
 
@@ -506,7 +536,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDRI++;
                     invDRJ++;
 
-                    invDRDelay = Time.time + loadSpeedSlider.value;
+                    invDRDelay = Time.time + defaultDelaySpan;
                 }
 
                 if (invDRJ >= Dimension - 1)
@@ -529,7 +559,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDRI++;
                     invDRJ++;
 
-                    invDRDelay = Time.time + loadSpeedSlider.value;
+                    invDRDelay = Time.time + defaultDelaySpan;
                 }
             }
 
@@ -545,81 +575,5 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 invDRIsFirstPartDone = false;
             }
         }
-    }
-
-    public void Switch2Diagonal()
-    {
-        if (loadStyle == TraverseStyle.Diagonal)
-            return;
-
-        invHCounter = 0;
-
-        hI = 0;
-        hJ = 0;
-
-        hSI = 0;
-        hSJ = 0;
-        hSCounter = 0;
-
-        invVCounter = 0;
-
-        vI = 0;
-        vJ = 0;
-
-        dLSecCounter = -1;
-        dLCounter = 0;
-        dIsFirstPartDone = false;
-
-        invDLSecCounter = Dimension;
-        invDLCounter = 0;
-        invDIsFirstPartDone = false;
-
-        dRSecCounter = Dimension;
-        dRCounter = 0;
-        dRIsFirstPartDone = false;
-
-        invDRSecCounter = -1;
-        invDRCounter = 0;
-        invDRIsFirstPartDone = false;
-
-        loadStyle = TraverseStyle.Diagonal;
-    }
-
-    public void Switch2Straight()
-    {
-        if (loadStyle == TraverseStyle.Straight)
-            return;
-
-        invHCounter = 0;
-
-        hI = 0;
-        hJ = 0;
-
-        hSI = 0;
-        hSJ = 0;
-        hSCounter = 0;
-
-        invVCounter = 0;
-
-        vI = 0;
-        vJ = 0;
-
-        dLSecCounter = -1;
-        dLCounter = 0;
-        dIsFirstPartDone = false;
-
-        invDLSecCounter = Dimension;
-        invDLCounter = 0;
-        invDIsFirstPartDone = false;
-
-        dRSecCounter = Dimension;
-        dRCounter = 0;
-        dRIsFirstPartDone = false;
-
-        invDRSecCounter = -1;
-        invDRCounter = 0;
-        invDRIsFirstPartDone = false;
-
-        loadStyle = TraverseStyle.Straight;
     }
 }
