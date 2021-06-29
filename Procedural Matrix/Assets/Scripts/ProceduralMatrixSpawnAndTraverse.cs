@@ -39,6 +39,9 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
     bool dIsFirstPartDone = false, invDIsFirstPartDone = false, dRIsFirstPartDone = false,
         invDRIsFirstPartDone = false;
 
+    bool hbool = false, hIbool = false, hSbool = false, vbool = false, vIbool = false,
+        dLbool = false, dLIbool = false, dRbool = false, dRIbool = false;
+
     int currChannel;
 
     private void Awake()
@@ -220,8 +223,10 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
     void ChangeChannel()
     {
-        if (Input.GetKeyDown(KeyCode.RightArrow)) SwitchEnum(1);
-        if (Input.GetKeyDown(KeyCode.LeftArrow)) SwitchEnum(-1);
+        if (Input.GetKeyDown(KeyCode.RightArrow))
+        { ResetAll();  SwitchEnum(1);}
+        if (Input.GetKeyDown(KeyCode.LeftArrow)) 
+        { ResetAll();  SwitchEnum(-1);};
     }
 
     void SwitchEnum(int inputDir)
@@ -242,7 +247,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
             while (hJ < Dimension)
             {
-                squares[hI, hJ].BounceSquare();
+                if (hbool)
+                {
+                    squares[hI, hJ].BounceSquare(true);
+                }
+                else
+                {
+                    squares[hI, hJ].BounceSquare(false);
+                }
 
                 hJ++;
 
@@ -252,7 +264,10 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
             hI++;
 
             if (hI == Dimension)
+            {
                 hI = 0;
+                hbool = !hbool;
+            }
         }
     }
 
@@ -265,8 +280,15 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
             while (invHJ < Dimension)
             {
-                squares[invHI, invHJ].BounceSquare();
-
+                if (hIbool)
+                {
+                    squares[invHI, invHJ].BounceSquare(true);
+                }
+                else
+                {
+                    squares[invHI, invHJ].BounceSquare(false);
+                }
+                
                 invHJ++;
 
                 invHDelay = Time.time + defaultDelaySpan;
@@ -275,7 +297,10 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
             invHCounter++;
 
             if (invHCounter == Dimension)
-               invHCounter = 0;
+            {
+                invHCounter = 0;
+                hIbool = !hIbool;
+            }  
         }
     }
 
@@ -286,13 +311,23 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
             hSI = hSCounter / Dimension;
             hSJ = hSCounter % Dimension;
 
-            squares[hSI, hSJ].BounceSquare();
-
+            if (hSbool)
+            {
+                squares[hSI, hSJ].BounceSquare(true);
+            }
+            else
+            {
+                squares[hSI, hSJ].BounceSquare(false);
+            }
+            
             hSDelay = Time.time + defaultDelaySpan;
             hSCounter++;
 
             if (hSCounter == (Dimension * Dimension))
+            {
                 hSCounter = 0;
+                hSbool = !hSbool;
+            }
         }
     }
 
@@ -304,7 +339,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
             while (vJ < Dimension)
             {
-                squares[vJ, vI].BounceSquare();
+                if (vbool)
+                {
+                    squares[vJ, vI].BounceSquare(true);
+                }
+                else
+                {
+                    squares[vJ, vI].BounceSquare(false);
+                }
 
                 vJ++;
 
@@ -314,7 +356,10 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
             vI++;
 
             if (vI == Dimension)
+            {
                 vI = 0;
+                vbool = !vbool;
+            }  
         }
     }
 
@@ -327,8 +372,15 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
             while (invVJ < Dimension)
             {
-                squares[invVJ, invVI].BounceSquare();
-
+                if (vIbool)
+                {
+                    squares[invVJ, invVI].BounceSquare(true);
+                }
+                else
+                {
+                    squares[invVJ, invVI].BounceSquare(false);
+                }
+                
                 invVJ++;
 
                 invVDelay = Time.time + defaultDelaySpan;
@@ -337,7 +389,10 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
             invVCounter++;
 
             if (invVCounter == Dimension)
+            {
                 invVCounter = 0;
+                vIbool = !vIbool;
+            }
         }
     }
 
@@ -354,8 +409,15 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (dLI >= 0)
                 {
-                    squares[dLI, dLJ].BounceSquare();
-
+                    if (dLbool)
+                    {
+                        squares[dLI, dLJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[dLI, dLJ].BounceSquare(false);
+                    }
+                    
                     dLI--;
                     dLJ++;
 
@@ -377,7 +439,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (dLJ <= Dimension - 1)
                 {
-                    squares[dLI, dLJ].BounceSquare();
+                    if (dLbool)
+                    {
+                        squares[dLI, dLJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[dLI, dLJ].BounceSquare(false);
+                    }
 
                     dLI--;
                     dLJ++;
@@ -396,6 +465,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 dLSecCounter = -1;
                 dLCounter = 0;
                 dIsFirstPartDone = false;
+                dLbool = !dLbool;
             }
         }
     }
@@ -413,8 +483,15 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (invDLI <= Dimension - 1)
                 {
-                    squares[invDLI, invDLJ].BounceSquare();
-
+                    if (dLIbool)
+                    {
+                        squares[invDLI, invDLJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[invDLI, invDLJ].BounceSquare(false);
+                    }
+                    
                     invDLI++;
                     invDLJ--;
 
@@ -436,7 +513,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (invDLJ >= 0)
                 {
-                    squares[invDLI, invDLJ].BounceSquare();
+                    if (dLIbool)
+                    {
+                        squares[invDLI, invDLJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[invDLI, invDLJ].BounceSquare(false);
+                    }
 
                     invDLI++;
                     invDLJ--;
@@ -455,6 +539,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 invDLSecCounter = Dimension;
                 invDLCounter = 0;
                 invDIsFirstPartDone = false;
+                dLIbool = !dLIbool;
             }
         }
     }
@@ -472,7 +557,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (dRI >= 0)
                 {
-                    squares[dRI, dRJ].BounceSquare();
+                    if (dRbool)
+                    {
+                        squares[dRI, dRJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[dRI, dRJ].BounceSquare(false);
+                    }
 
                     dRI--;
                     dRJ--;
@@ -495,7 +587,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (dRJ >= 0)
                 {
-                    squares[dRI, dRJ].BounceSquare();
+                    if (dRbool)
+                    {
+                        squares[dRI, dRJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[dRI, dRJ].BounceSquare(false);
+                    }
 
                     dRI--;
                     dRJ--;
@@ -514,6 +613,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 dRSecCounter = Dimension;
                 dRCounter = 0;
                 dRIsFirstPartDone = false;
+                dRbool = !dRbool;
             }
         }
     }
@@ -531,8 +631,15 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (invDRI <= Dimension - 1)
                 {
-                    squares[invDRI, invDRJ].BounceSquare();
-
+                    if (dRIbool)
+                    {
+                        squares[invDRI, invDRJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[invDRI, invDRJ].BounceSquare(false);
+                    }
+                   
                     invDRI++;
                     invDRJ++;
 
@@ -554,7 +661,14 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 while (invDRJ <= Dimension - 1)
                 {
-                    squares[invDRI, invDRJ].BounceSquare();
+                    if (dRIbool)
+                    {
+                        squares[invDRI, invDRJ].BounceSquare(true);
+                    }
+                    else
+                    {
+                        squares[invDRI, invDRJ].BounceSquare(false);
+                    }
 
                     invDRI++;
                     invDRJ++;
@@ -573,7 +687,46 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 invDRSecCounter = -1;
                 invDRCounter = 0;
                 invDRIsFirstPartDone = false;
+                dRIbool = !dRIbool;
             }
         }
+    }
+
+    private void ResetAll()
+    {
+        hI = 0;
+        hbool = !hbool;
+
+        invHCounter = 0;
+        hIbool = !hIbool;
+
+        hSCounter = 0;
+        hSbool = !hSbool;
+
+        vI = 0;
+        vbool = !vbool;
+
+        invVCounter = 0;
+        vIbool = !vIbool;
+
+        dLSecCounter = -1;
+        dLCounter = 0;
+        dIsFirstPartDone = false;
+        dLbool = !dLbool;
+
+        invDLSecCounter = Dimension;
+        invDLCounter = 0;
+        invDIsFirstPartDone = false;
+        dLIbool = !dLIbool;
+
+        dRSecCounter = Dimension;
+        dRCounter = 0;
+        dRIsFirstPartDone = false;
+        dRbool = !dRbool;
+
+        invDRSecCounter = -1;
+        invDRCounter = 0;
+        invDRIsFirstPartDone = false;
+        dRIbool = !dRIbool;
     }
 }
