@@ -1,5 +1,7 @@
 ﻿using System;
 using UnityEngine;
+using UnityEngine.UI;
+using System.Collections;
 
 public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 {
@@ -16,8 +18,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
     public int Dimension = 15;
 
-    [Range(0.2f, 0f)]
-    public float defaultDelaySpan = 0.094f;
+    public Slider slider;
 
     private BounceTween[,] squares;
 
@@ -44,16 +45,38 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
     int currChannel;
 
+    const string speedKey = "NftSpeed";
+
+    public void AdjustSpeed(float sliderVal)
+    {
+        PlayerPrefs.SetFloat(speedKey, sliderVal);
+    }
+
     private void Awake()
     {
         invDLSecCounter = Dimension;
         dRSecCounter = Dimension;
 
-        currChannel = (int)traverseMode;
+        //currChannel = (int)traverseMode;
 
         SpawnMatrix(Dimension);
+
+        if (PlayerPrefs.HasKey(speedKey))
+        {
+            slider.value = PlayerPrefs.GetFloat(speedKey);
+        }
     }
 
+    private IEnumerator Start()
+    {
+        while (true)
+        {
+            RandomlyChangeChannelOneDirection();
+
+            yield return new WaitForSecondsRealtime(UnityEngine.Random.Range(5f, 10f));
+        }
+    }
+    
     void SpawnMatrix(int dimension)
     {
         squares = new BounceTween[dimension, dimension];
@@ -73,7 +96,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
     private void Update()
     {
-        ChangeChannel();
+        ChangeChannelAnyDirection();
 
         /*
          * All Traversing functions are stackable and based on the demo video,
@@ -221,7 +244,16 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
         #endregion
     }
 
-    void ChangeChannel()
+    void RandomlyChangeChannelOneDirection()
+    {
+        ResetAll();
+
+        int randEnum = UnityEngine.Random.Range(0, Enum.GetValues(typeof(TraverseMode)).Length);
+
+        traverseMode = (TraverseMode)randEnum;
+    }
+
+    void ChangeChannelAnyDirection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         { ResetAll();  SwitchEnum(1);}
@@ -258,7 +290,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 hJ++;
 
-                hDelay = Time.time + defaultDelaySpan;
+                hDelay = Time.time + (slider.maxValue - slider.value);
             }
 
             hI++;
@@ -291,7 +323,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 
                 invHJ++;
 
-                invHDelay = Time.time + defaultDelaySpan;
+                invHDelay = Time.time + (slider.maxValue - slider.value);
             }
 
             invHCounter++;
@@ -320,7 +352,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 squares[hSI, hSJ].BounceSquare(false);
             }
             
-            hSDelay = Time.time + defaultDelaySpan;
+            hSDelay = Time.time + (slider.maxValue - slider.value);
             hSCounter++;
 
             if (hSCounter == (Dimension * Dimension))
@@ -350,7 +382,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
 
                 vJ++;
 
-                vDelay = Time.time + defaultDelaySpan;
+                vDelay = Time.time + (slider.maxValue - slider.value);
             }
 
             vI++;
@@ -383,7 +415,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                 
                 invVJ++;
 
-                invVDelay = Time.time + defaultDelaySpan;
+                invVDelay = Time.time + (slider.maxValue - slider.value);
             }
 
             invVCounter++;
@@ -421,7 +453,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dLI--;
                     dLJ++;
 
-                    dLDelay = Time.time + defaultDelaySpan;
+                    dLDelay = Time.time + (slider.maxValue - slider.value);
                 }
 
                 if (dLJ >= Dimension - 1)
@@ -451,7 +483,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dLI--;
                     dLJ++;
 
-                    dLDelay = Time.time + defaultDelaySpan;
+                    dLDelay = Time.time + (slider.maxValue - slider.value);
                 }
             }
 
@@ -495,7 +527,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDLI++;
                     invDLJ--;
 
-                    invDLDelay = Time.time + defaultDelaySpan;
+                    invDLDelay = Time.time + (slider.maxValue - slider.value);
                 }
 
                 if (invDLJ <= 0)
@@ -525,7 +557,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDLI++;
                     invDLJ--;
 
-                    invDLDelay = Time.time + defaultDelaySpan;
+                    invDLDelay = Time.time + (slider.maxValue - slider.value);
                 }
             }
 
@@ -569,7 +601,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dRI--;
                     dRJ--;
 
-                    dRDelay = Time.time + defaultDelaySpan;
+                    dRDelay = Time.time + (slider.maxValue - slider.value);
                 }
 
                 if (dRJ <= 0)
@@ -599,7 +631,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     dRI--;
                     dRJ--;
 
-                    dRDelay = Time.time + defaultDelaySpan;
+                    dRDelay = Time.time + (slider.maxValue - slider.value);
                 }
             }
 
@@ -643,7 +675,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDRI++;
                     invDRJ++;
 
-                    invDRDelay = Time.time + defaultDelaySpan;
+                    invDRDelay = Time.time + (slider.maxValue - slider.value);
                 }
 
                 if (invDRJ >= Dimension - 1)
@@ -673,7 +705,7 @@ public class ProceduralMatrixSpawnAndTraverse : MonoBehaviour
                     invDRI++;
                     invDRJ++;
 
-                    invDRDelay = Time.time + defaultDelaySpan;
+                    invDRDelay = Time.time + (slider.maxValue - slider.value);
                 }
             }
 

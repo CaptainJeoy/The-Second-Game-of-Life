@@ -4,9 +4,6 @@ public class BounceTween : MonoBehaviour
 {
     public float scale = 10, delay = 0.2f;
 
-    [SerializeField]
-    private bool isColourStay = false;
-
     private float desival = 1f, currval = 1f, elasped = 0f;
 
     private SpriteRenderer sp;
@@ -30,8 +27,8 @@ public class BounceTween : MonoBehaviour
         {
             desival = 1;
         }
-
     }
+
     public void BounceSquare(bool isClearPaint)
     {
         desival = 0.5f;
