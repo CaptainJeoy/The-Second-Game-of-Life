@@ -1,3 +1,5 @@
-# ProceduralMatrix
-Answers the question, "How many ways can you traverse a Matrix".
+# The Second Game of Life
+A cellular automaton simulation based on several square-matrix traversal algorithms.
+
+Watch a demo here: https://youtu.be/UJ7nQR_EWyI
   
